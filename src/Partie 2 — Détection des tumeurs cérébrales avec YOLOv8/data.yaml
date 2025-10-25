@@ -1,0 +1,8 @@
+train: B:\Deep Learning\DeepMediScan\data\Filtered_Data\images\train
+val: B:\Deep Learning\DeepMediScan\data\Filtered_Data\images\val
+
+nc: 4 
+names: ["Glioma", "Meningioma", "No Tumor", "Pituitary"]
+
+
+augmentations: false  
