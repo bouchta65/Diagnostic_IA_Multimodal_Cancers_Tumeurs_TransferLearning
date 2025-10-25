@@ -39,3 +39,29 @@ if uploaded_image1:
     predicted_class_name = class_names[predicted_class]
 
     st.success(f"Classe prédite : {predicted_class_name}")
+
+# Partie 2 : Détection de tumeur cérébrale 
+st.header("Partie 2 : Détection des tumeurs cérébrales")
+
+uploaded_image2 = st.file_uploader("Téléchargez une image IRM cérébrale", type=["png", "jpg", "jpeg"], key="brain")
+
+if uploaded_image2:
+    temp_path = "temp_brain_image.png"
+    img2_pil = Image.open(uploaded_image2).convert("RGB")
+    img2_pil.save(temp_path)
+
+    yolo_model = YOLO("../models/yolov8_brain_tumor_final.pt")
+
+    results = yolo_model.predict(source=temp_path, conf=0.25, iou=0.45)
+
+    for result in results:
+        result_img = result.plot()  
+        st.image(result_img, caption="Résultat détection YOLO", use_column_width=True)
+
+        boxes = result.boxes.xyxy
+        scores = result.boxes.conf
+        class_ids = result.boxes.cls
+
+        st.write("Boxes:", boxes.cpu().numpy())
+        st.write("Scores:", scores.cpu().numpy())
+        st.write("Class IDs:", class_ids.cpu().numpy())
